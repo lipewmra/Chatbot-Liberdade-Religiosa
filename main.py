@@ -22,7 +22,14 @@ hide_st_style = """
             header {visibility: hidden;}
             [data-testid="stToolbar"] {visibility: hidden;}
             [data-testid="stSidebarNav"] {display: none;}
-            [data-testid="stSidebar"] {background-color: #f0f2f6;}
+            [data-testid="stSidebar"] {
+                background-color: #f0f2f6;
+            }
+            [data-testid="stSidebar"] * {
+                color: #333333 !important;
+            }
+            /* Specific overrides for elements that might need different colors if necessary,
+               but for now forcing dark gray/black on the light sidebar background. */
             </style>
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)
@@ -30,33 +37,30 @@ st.markdown(hide_st_style, unsafe_allow_html=True)
 # Initialize database
 init_db()
 
-# Sidebar configuration
-with st.sidebar:
-    # Display Logo if exists
-    if os.path.exists("libreligiosa.png"):
-        st.image("libreligiosa.png", use_container_width=True)
-    
-    st.title("🤖 Chatbot")
-    st.info("Responde perguntas sobre Liberdade Religiosa na IASD.")
-    
-    # Check for API Key
-    # Load from environment variable (hardcoded/server-side)
-    api_key = os.getenv("GROQ_API_KEY")
-    
-    if not api_key:
-        st.error("Erro de Configuração: API Key não encontrada.")
-        st.stop()
-    
-    st.divider()
-    # Custom Navigation
-    st.page_link("pages/admin.py", label="Área Administrativa", icon="🔒")
+# Sidebar removed as per requirement
+
 
 # Main Chat Interface
-st.title("🕊️ Chatbot Liberdade Religiosa")
+# Center the image using columns
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    if os.path.exists("logowhite.png"):
+        st.image("logowhite.png", use_container_width=True)
+
+st.markdown("<h1 style='text-align: center;'>Assistente Pessoal de Assuntos sobre Liberdade Religiosa, da IASD Central de Campina Grande, PB</h1>", unsafe_allow_html=True)
+
+st.markdown("""
+<div style='text-align: center; margin-bottom: 20px;'>
+Olá usuário/a, como seu assistente pessoal estou habilitado a trazer orientações sobre o assunto de liberdade religiosa, posso lhe ajudar com problemas com escola, universidade, trabalho, empregador e outros.<br>
+Para iniciar me fale abaixo o que você deseja saber
+</div>
+""", unsafe_allow_html=True)
 
 # Initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
+
+
 
 # Display chat messages from history on app rerun
 for message in st.session_state.messages:
@@ -65,12 +69,20 @@ for message in st.session_state.messages:
 
 # React to user input
 if prompt := st.chat_input("Digite sua pergunta sobre liberdade religiosa..."):
+
+    # Normal Chat Flow
     # Display user message in chat message container
     st.chat_message("user").markdown(prompt)
     # Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
 
     # Check for API Key before processing
+    # Try st.secrets first (Streamlit Cloud), then fallback to .env (local)
+    try:
+        api_key = st.secrets["GROQ_API_KEY"]
+    except (KeyError, FileNotFoundError):
+        api_key = os.getenv("GROQ_API_KEY")
+
     if not api_key:
         st.error("Erro: Chave de API não configurada.")
         st.stop()

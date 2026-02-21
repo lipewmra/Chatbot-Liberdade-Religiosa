@@ -2,7 +2,6 @@ streamlit
 groq
 python-dotenv
 pandas
-watchdog
 pypdf
 beautifulsoup4
 requests

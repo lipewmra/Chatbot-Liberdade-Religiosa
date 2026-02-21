@@ -1,0 +1,17 @@
+# Environment variables
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Database (local only)
+chatbot.db
+
+# Streamlit secrets (local only)
+.streamlit/secrets.toml
+
+# IDE
+.vscode/
+.idea/
