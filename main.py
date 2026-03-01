@@ -51,7 +51,7 @@ st.markdown("<h1 style='text-align: center;'>Assistente Pessoal de Assuntos sobr
 
 st.markdown("""
 <div style='text-align: center; margin-bottom: 20px;'>
-Olá usuário/a, como seu assistente pessoal estou habilitado a trazer orientações sobre o assunto de liberdade religiosa, posso lhe ajudar com problemas com escola, universidade, trabalho, empregador e outros.<br>
+Olá usuário/a, como seu assistente pessoal estou habilitado a trazer orientações sobre o assunto de liberdade religiosa, posso lhe ajudar com problemas na escola, na universidade, no trabalho, empregador e outros.<br>
 Para iniciar me fale abaixo o que você deseja saber
 </div>
 """, unsafe_allow_html=True)
