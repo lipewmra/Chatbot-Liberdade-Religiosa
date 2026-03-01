@@ -42,9 +42,30 @@ def load_local_documents():
              context += get_txt_text(file_path)
     return context
 
+import io
+
 def fetch_url_content(url):
     try:
         response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        
+        # Check if it's a PDF by URL extension or Content-Type
+        content_type = response.headers.get('Content-Type', '').lower()
+        if url.lower().endswith('.pdf') or 'application/pdf' in content_type:
+            try:
+                # Read PDF from bytes
+                pdf_file = io.BytesIO(response.content)
+                reader = PdfReader(pdf_file)
+                text = ""
+                for page in reader.pages:
+                    extracted = page.extract_text()
+                    if extracted:
+                        text += extracted + "\n"
+                return text if text else "Nenhum texto pôde ser extraído deste PDF."
+            except Exception as pdf_err:
+                return f"Erro ao processar PDF: {pdf_err}"
+        
+        # Fallback to HTML parsing
         soup = BeautifulSoup(response.content, 'html.parser')
         # Simple extraction: get all paragraph text
         paragraphs = soup.find_all('p')
